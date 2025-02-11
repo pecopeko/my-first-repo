@@ -1,0 +1,13 @@
+# Node.js 関連
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# MacOS 固有
+.DS_Store
+
+# 環境変数ファイル（もし利用しているなら）
+.env
+
+# その他、必要に応じて追加
