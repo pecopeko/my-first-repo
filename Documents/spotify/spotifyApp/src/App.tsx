@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './App.css'
 
 const KeySearchWebsite: React.FC = () => {
     const [songToSing, setSongToSing] = useState('');
@@ -16,7 +17,7 @@ const KeySearchWebsite: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-900 text-white">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-900 text-white">
             <h1 className="text-3xl font-bold mb-8">Find the perfect key for you.</h1>
             <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
                 <div className="mb-4">
@@ -38,7 +39,7 @@ const KeySearchWebsite: React.FC = () => {
                 <div className="flex justify-between mt-4">
                     <button
                         onClick={handleReset}
-                        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500"
+                        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-red-500"
                     >
                         Reset
                     </button>
