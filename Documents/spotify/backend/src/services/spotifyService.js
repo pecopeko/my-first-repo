@@ -1,5 +1,5 @@
 require('dotenv').config(); // .env読み込み
-const fetch = require('node-fetch');
+
 
 /**
  * Spotify Web API へ曲名とアーティストを送って結果を取得する関数
@@ -7,19 +7,25 @@ const fetch = require('node-fetch');
  * @param {string} artistName 
  * @returns {Promise<object>} Spotify APIの検索結果
  */
-const getSongData = async (songName, artistName) => {
+const getSongData = async (token, songName, artistName) => {
   try {
-    // 実際はトークン取得手続きが必要(下記は例)
-    const token = await getAccessToken(); // ClientCredentialsフローなど
-
-    const query = encodeURIComponent(`${songName} ${artistName}`);
-    const url = `https://api.spotify.com/v1/search?q=${query}&type=track&limit=1`;
+    // クエリ構築
+    // クエリ構築
+    const encodedTrack = encodeURIComponent(`track:${songName}`);
+    const encodedArtist = encodeURIComponent(`artist:${artistName}`);
+    const url = `https://api.spotify.com/v1/search?q=${encodedTrack}+${encodedArtist}&type=track&limit=1`;
 
     const response = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
     });
+
+    if (response.status === 401) {
+      tokenCache.value = null; // トークン無効化
+      throw new Error('トークンが無効です。再認証が必要です');
+    }
     
     if (!response.ok) {
       // 失敗時処理
@@ -34,17 +40,6 @@ const getSongData = async (songName, artistName) => {
     throw error;
   }
 };
-
-
-const getAccessToken = async () => {
-    // 例：環境変数を用いたID/Secretの取得
-    const clientId = process.env.SPOTIFY_CLIENT_ID;
-    const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  
-    // 例として単にアクセストークンを返すダミー
-    // 実際は fetch などでトークン取得し、JSONのaccess_tokenを返す
-    return 'YOUR_SPOTIFY_ACCESS_TOKEN';
-  };
   
   module.exports = {
     getSongData

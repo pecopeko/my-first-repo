@@ -1,4 +1,6 @@
 const { getSongData } = require('../services/spotifyService');
+const { getKeyInfo } = require('../services/keyService');
+const { getAccessToken } = require('../controllers/getAccess');
 
 /**
  * /api/songs POSTの処理
@@ -9,13 +11,20 @@ const { getSongData } = require('../services/spotifyService');
 const handlePostSongs = async (req, res) => {
   try {
     const { songToSing, bestSong, songToSingArtist, bestSongArtist } = req.body;
-
+    const token = await getAccessToken();
     // 1回目のSpotify検索
-    const firstResult = await getSongData(songToSing, songToSingArtist);
+    const firstResult = await getSongData(token, songToSing, songToSingArtist);
+    console.log(firstResult);
+    const firstTrack = firstResult.tracks.items[0];
+    const firstTrackId = firstTrack.id
+    // const firstTrackName = firstTrack.name
+    // const firstTrackArtists = firstTrack.artists.map(artist => artist.name)
+    const firstTrackKey = await getKeyInfo(token, firstTrackId);
+    console.log(firstTrackKey);
 
     // 2回目のSpotify検索
-    const secondResult = await getSongData(bestSong, bestSongArtist);
-
+    const secondResult = await getSongData(token, bestSong, bestSongArtist);
+    console.log(secondResult);
     // 好みで配列にするかオブジェクトにするか
     // ここではまとめて返却
     const responseData = {
